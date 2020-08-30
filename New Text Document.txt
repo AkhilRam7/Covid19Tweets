@@ -1,0 +1,23 @@
+company:
+
+company launch and failures plot
+company active state as per timeline
+
+Launch pad
+launch centers dynamics (any rel between geo or leo)
+most used launch pad
+
+Datum
+launches timeseries
+mission timeseries
+failure timeseries
+company launch timesereis
+
+Missoin status
+cost
+rocket status
+
+Strapons
+stages
+
+Network
