@@ -1,28 +1,38 @@
-{
-    'name': 'transport',
-    'children': [
-        {
-            'name': 'plane',
-            'free': 'true',
-            'description': 'No Description',
-            'children': [
-                {'name': 'boeing', 'free': 'true', 'description': 'No Description'},
-                {'name': 'vistara', 'free': 'true', 'description': 'No Description'}
-            ]
-        },
-        {
-            'name': 'car',
-            'free': 'true',
-            'description': 'No Description',
-            'children': [
-                {'name': 'benz', 'free': 'true', 'description': 'No Description'},
-                {'name': 'audi', 'free': 'true', 'description': 'No Description'}
-            ]
-        },
-        {
-            'name': 'ship',
-            'free': 'true',
-            'description': 'No Description'
-        }
-    ]
-}
+from collections import defaultdict
+
+# Provided sample data
+data = [
+    ['transport', 'plane', 'nan'],
+    ['transport', 'plane', 'boeing'],
+    ['transport', 'plane', 'vistara'],
+    ['transport', 'car', 'nan'],
+    ['transport', 'car', 'benz'],
+    ['transport', 'car', 'audi'],
+    ['transport', 'ship', 'nan']
+]
+
+# Convert data into a nested hierarchical structure
+hierarchical_data = defaultdict(lambda: defaultdict(list))
+
+for item in data:
+    hierarchical_data[item[0]][item[1]].append({"name": item[2]})
+
+for item in hierarchical_data.values():
+    for sub_item in item.values():
+        for element in sub_item:
+            if element["name"] == 'nan':
+                element.pop("name")
+
+hierarchy = {"name": "transport", "children": []}
+for key, value in hierarchical_data["transport"].items():
+    hierarchy["children"].append({"name": key, "children": value})
+
+def add_attributes(node):
+    if "children" in node:
+        for child in node["children"]:
+            child["free"] = "true"
+            child["description"] = "No Description"
+            add_attributes(child)
+
+add_attributes(hierarchy)
+print(hierarchy)
