@@ -1,93 +1,20 @@
-from IPython.display import display, HTML
-
-data = {
-    "name": "A corp",
-    "children": [
-        {
-            "name": "A corp",
-            "children": [
-                {"name": "A corp"},
-                {"name": "A corp international"},
-                {"name": "A corp domestic"}
-            ]
-        },
-        {
-            "name": "A international",
-            "children": [
-                {"name": "A corp bus"},
-                {"name": "A corp car"}
-            ]
-        },
-        {
-            "name": "A domestic",
-            "children": [
-                {"name": "A corp carpool"},
-                {"name": "A corp wagon"}
-            ]
-        }
-    ]
-}
-
-html_template = f"""
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Tidy Tree using D3.js</title>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-</head>
-<body>
-    <svg width="600" height="400"></svg>
-
-    <script>
-        var data = {data};
-
-        var width = 600;
-        var height = 400;
-
-        var svg = d3.select("svg")
-            .attr("width", width)
-            .attr("height", height)
-            .append("g")
-            .attr("transform", "translate(50, 50)");
-
-        var treeLayout = d3.tree().size([width - 100, height - 100]);
-        var root = d3.hierarchy(data);
-        treeLayout(root);
-
-        var links = root.links();
-        var linkPathGenerator = d3.linkHorizontal()
-            .x(d => d.y)
-            .y(d => d.x);
-
-        svg.selectAll("path.link")
-            .data(links)
-            .enter()
-            .append("path")
-            .attr("class", "link")
-            .attr("d", linkPathGenerator);
-
-        var nodes = root.descendants();
-        svg.selectAll("circle.node")
-            .data(nodes)
-            .enter()
-            .append("circle")
-            .attr("class", "node")
-            .attr("cx", d => d.y)
-            .attr("cy", d => d.x)
-            .attr("r", 4);
-
-        svg.selectAll("text.label")
-            .data(nodes)
-            .enter()
-            .append("text")
-            .attr("class", "label")
-            .attr("x", d => d.y)
-            .attr("y", d => d.x)
-            .attr("dy", "0.35em")
-            .text(d => d.data.name);
-    </script>
-</body>
-</html>
-"""
-
-display(HTML(html_template))
+1. I'm placing an order for $2,500 worth of Tesla shares.
+2. I want to invest $3,000 in Google through a market order.
+3. Placing a market order for 150 shares of Microsoft.
+4. I'd like to buy $1,200 worth of Facebook stocks.
+5. Investing $5,500 in Amazon through a market order.
+6. Placing an order for 200 shares of Netflix at the current market price.
+7. I want to purchase $4,000 worth of Nvidia shares.
+8. I'm placing a market order for 100 shares of Intel.
+9. Investing $2,800 in IBM through a market order.
+10. Placing an order for $6,500 in Qualcomm stocks.
+11. I'd like to buy 300 shares of Adobe through a market order.
+12. Investing $1,700 in AMD at the current market price.
+13. Placing a market order for $3,300 worth of PayPal stocks.
+14. I want to purchase $2,000 worth of Salesforce shares.
+15. I'm placing an order for 250 shares of Oracle through a market order.
+16. Investing $4,800 in Zoom Video Communications at the current market price.
+17. Placing a market order for $3,700 worth of Shopify stocks.
+18. I'd like to buy 180 shares of Square through a market order.
+19. Investing $2,300 in Alibaba at the current market price.
+20. Placing an order for $5,000 worth of Twitter shares.
