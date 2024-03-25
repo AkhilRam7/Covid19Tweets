@@ -1,72 +1,53 @@
-import streamlit as st
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+import pandas as pd
 
-# Set wide layout for the entire app
-st.set_page_config(layout="wide")
+# Assuming your dataframe is called 'df'
+levels = ['Vehicles', 'Vehicle Category', 'Vehicle Subcategory']  # Levels for hierarchy
+value_column = 'Sales'  # Column containing sales data
 
-st.markdown(""" 
-<style>
-    [data-testid="stAppViewContainer"]{
-      background: linear-gradient(to right, #e5e5f7 50%, #ffffff 50%);
-    }
-    [data-testid="stHeader"]{
-      background: linear-gradient(to right, #e5e5f7 50%, #ffffff 50%);
-    }
-    .block-container {
-        padding-top: 5rem;
-        padding-bottom: 0rem;
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
-    }
-    .scrollable-text {
-        overflow-y: scroll;
-        padding: 10px;
-    }
-</style>
-""" ,unsafe_allow_html=True)
+def build_hierarchical_dataframe(df, levels, value_column):
+    """
+    Build a hierarchy of levels for Sunburst chart.
 
-# Create a single wide column
-main_column = st.container()
+    Levels are given starting from the bottom to the top of the hierarchy,
+    ie the last level corresponds to the root.
+    """
+    df_all_trees = pd.DataFrame(columns=['id', 'parent', 'value'])
+    for i, level in enumerate(levels):
+        df_tree = pd.DataFrame(columns=['id', 'parent', 'value'])
+        dfg = df.groupby(levels[i:]).sum()
+        dfg = dfg.reset_index()
+        df_tree['id'] = dfg[level].copy()
+        if i < len(levels) - 1:
+            df_tree['parent'] = dfg[levels[i+1]].copy()
+        else:
+            df_tree['parent'] = 'total'
+        df_tree['value'] = dfg[value_column]
+        df_all_trees = df_all_trees.append(df_tree, ignore_index=True)
+    total = pd.Series(dict(id='total', parent='', value=df[value_column].sum()))
+    df_all_trees = df_all_trees.append(total, ignore_index=True)
+    return df_all_trees
 
-# Create two containers inside the main column for sections
-section_1_container, section_2_container = main_column.columns(2)
+df_all_trees = build_hierarchical_dataframe(df.copy(), levels, value_column)
 
-# Add content to sections
-with section_1_container:
-    st.subheader("Profile & Team")
-    st.write("This is content in section 1.")
-    st.divider()
+fig = make_subplots(1, 1, specs=[[{"type": "domain"}]])
 
-    st.subheader("Notes")
-    notes = "This is a long text example that will be scrollable within Section 1. You can add any amount of text here, and it will only show a limited portion initially. By using the scrollbar, you can view the entire content.This is a long text example that will be scrollable within Section 1. You can add any amount of text here, and it will only show a limited portion initially. By using the scrollbar, you can view the entire content.This is a long text example that will be scrollable within Section 1. You can add any amount of text here, and it will only show a limited portion initially. By using the scrollbar, you can view the entire content.This is a long text example that will be scrollable within Section 1. You can add any amount of text here, and it will only show a limited portion initially. By using the scrollbar, you can view the entire content.This is a long text example that will be scrollable within Section 1. You can add any amount of text here, and it will only show a limited portion initially. By using the scrollbar, you can view the entire content.This is a long text example that will be scrollable within Section 1. You can add any amount of text here, and it will only show a limited portion initially. By using the scrollbar, you can view the entire content.This is a long text example that will be scrollable within Section 1. You can add any amount of text here, and it will only show a limited portion initially. By using the scrollbar, you can view the entire content.This is a long text element that will be scrollable within Section 1. You can add any amount of text here, and it will only show a limited portion initially. By using the scrollbar, you can view the entire content.This is a long text element that will be scrollable within Section 1. You can add any amount of text here, and it will only show a limited portion initially. By using the scrollbar, you can view the entire content."
-    text_container_html = st.components.v1.html(
-        """
-        <div style="height: 300px;overflow-y: scroll;padding: 0px;font-family: ui-sans-serif;line-height: 1.5;"><p>
-        """+notes+"""</p>
-        </div>
-        """, height=150)
-    st.divider()
+fig.add_trace(go.Sunburst(
+    labels=df_all_trees['id'],
+    parents=df_all_trees['parent'],
+    values=df_all_trees['value'],
+    branchvalues='total',
+    # Set custom widths based on a percentile range of the sales data (adjust percentile as needed)
+    customdata=df_all_trees['value'].rank(pct=True).to_numpy() * 100,  
+    # Use customdata to define bar width based on percentile rank
+    width=df_all_trees['value'].rank(pct=True).to_numpy() * 100, 
+    mincoloraxis=df_all_trees['value'].min(),  # Set minimum color based on minimum sales
+    maxcoloraxis=df_all_trees['value'].max(),  # Set maximum color based on maximum sales
+    colorscale='Viridis',  # Select a color scale (e.g., 'Viridis', 'Plasma')
+    colorbar=dict(title='Sales'),  # Add a colorbar to display sales values
+    hovertemplate='<b>%{label}</b> <br> Sales: %{value}<br> Percentile: %{customdata:.2f}%',
+), 1, 1)
 
-    st.subheader("Engagements")
-    st.write("This is content in section 1.")
-    eng_tab1, eng_tab2 = st.tabs(["Individual", "BuyingUnit"])
-    with eng_tab1:
-        st.write("Individual")
-
-    with eng_tab2:
-        st.write("BuyingUnit")
-    st.divider()
-
-    st.subheader("Sales & Assets")
-    st.write("This is content in section 1.")
-    st.divider()
-
-    st.subheader("Book of Business")
-    st.write("This is content in section 1.")
-    st.divider()
-
-with section_2_container:
-    st.subheader("Recommendations")
-    st.write("This is content in section 2.")
-
-
-
+fig.update_layout(margin=dict(t=10, b=10, r=10, l=10))
+fig.show()
