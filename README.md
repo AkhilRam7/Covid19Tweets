@@ -1,14 +1,12 @@
-1. Data should be at BU + Tessitory
-2. ﻿﻿﻿Ignore Adrisors with diferent territory
-3. ﻿﻿﻿Assume same SFM, Coverage Type for BU (should be rare case)
-4. Hierarchy: A, HP, B, C
-5. WMC— WS territory + RW use remote territory (RN we are using WS territory ) (Viren Can help on this )
-6. ﻿﻿﻿SFM needs flexibility to choose Advisors before he meets BU
-7. ﻿﻿﻿Based on Advisor selection — (Left + Right) data should flow
-8. 8. SCM > Territory >  BU Name > (select Advisors) — Top filters
-9. profile Section will be a table of all existing fields
-10. practice and client Management won’t be affected.
-11. Fund Recommendations: 
-12. i) prefer Recommendation on BU Assers (difficult now, But check with bosun/Ankit if they did)
-13. ii) For now, we show all the recommended funds(No problem )— Just Add Name of  advisors somewhere to whom its recommended 
-14. Remove hardcoding in agenda, everything should be LLM generated.
+𝐈𝐧𝐭𝐫𝐨𝐝𝐮𝐜𝐭𝐢𝐨𝐧:
+1. Can you provide an overview of your experience working with PySpark and big data processing?
+2. What motivated you to specialize in PySpark, and how have you applied it in your previous roles?
+
+𝐏𝐲𝐒𝐩𝐚𝐫𝐤 𝐁𝐚𝐬𝐢𝐜𝐬:
+3. Explain the basic architecture of PySpark.
+4. How does PySpark relate to Apache Spark, and what advantages does it offer in distributed data processing?
+
+𝐃𝐚𝐭𝐚𝐅𝐫𝐚𝐦𝐞 𝐎𝐩𝐞𝐫𝐚𝐭𝐢𝐨𝐧𝐬:
+5. Describe the difference between a DataFrame and an RDD in PySpark.
+6. Can you explain transformations and actions in PySpark DataFrames?
+7. Provide examples of PySpark DataFrame operations you frequently use.
